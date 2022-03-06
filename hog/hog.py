@@ -100,7 +100,7 @@ def swine_align(player_score, opponent_score):
     False
     """
     # BEGIN PROBLEM 4a
-    """需要有一个值在进行iterative gcd 也需要进行一个一个increase"""
+    """需要有一个值在进行iterative gcd 也需要进行一个一个increase, i 和gcd 需要从1开始"""
     i = 1
     gcd = 1 
     if player_score == 0 or opponent_score == 0:
@@ -134,7 +134,10 @@ def pig_pass(player_score, opponent_score):
     False
     """
     # BEGIN PROBLEM 4b
-    "*** YOUR CODE HERE ***"
+    if player_score < opponent_score:
+        if opponent_score - player_score < 3:
+            return True
+    return False
     # END PROBLEM 4b
 
 
@@ -173,7 +176,25 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     """
     who = 0  # Who is about to take a turn, 0 (first) or 1 (second)
     # BEGIN PROBLEM 5
-    "*** YOUR CODE HERE ***"
+    while score0 < goal or score1 < goal:
+        """第1个人play game 当who = 这个人 -> num_roll是他的strategy -> 得到他的score -> 检查是否可以extra roll -> change term"""
+        if who == 0:
+            num_roll = strategy0(score0, score1)
+            score0 += take_turn(num_roll, score1, dice)
+            extra_turn(score0, score1)
+
+        else:
+            num_roll = strategy1(score1, score0)
+            score1 += take_turn(num_roll, score0, dice)
+            extra_turn(score1, score0)
+        
+        if who == 0:
+            who = 1 - who
+
+                
+
+
+
     # END PROBLEM 5
     # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
     # BEGIN PROBLEM 6
