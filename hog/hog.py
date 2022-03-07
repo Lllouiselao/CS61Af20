@@ -50,7 +50,7 @@ def free_bacon(score):
 
     # Trim pi to only (score + 1) digit(s)
     # BEGIN PROBLEM 2
-    """pi要后退多少步 得到值 ex: 投了0"""
+    """pi要后退多少步 得到值 ex: 投了0-> 3 """
     i = pi - score
     while i:
         pi = pi // 10
@@ -176,6 +176,8 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     """
     who = 0  # Who is about to take a turn, 0 (first) or 1 (second)
     # BEGIN PROBLEM 5
+    '''Q6 需要change term'''
+    term = 0 
     while score0 < goal or score1 < goal:
         """第1个人play game 当who = 这个人 -> num_roll是他的strategy -> 得到他的score -> 检查是否可以extra roll -> change term"""
         if who == 0:
@@ -191,14 +193,13 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
         if who == 0:
             who = 1 - who
 
-                
-
-
-
     # END PROBLEM 5
     # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
     # BEGIN PROBLEM 6
-    "*** YOUR CODE HERE ***"
+    if term ==0:
+        term = say_scores(score0, score1)
+    else:
+        term = say_scores(score1, score0)
     # END PROBLEM 6
     return score0, score1
 
@@ -282,7 +283,23 @@ def announce_highest(who, last_score=0, running_high=0):
     """
     assert who == 0 or who == 1, 'The who argument should indicate a player.'
     # BEGIN PROBLEM 7
-    "*** YOUR CODE HERE ***"
+    def announce(score0, score1):
+        '''who 输入的是我们要annnounce哪一个人'''
+        score_change = False
+        if who == 0:
+            if score0 - last_score > running_high:
+                print(score0 - last_score,"point(s)! The most yet for Player 0")
+                score_change = True
+            """用一个score_change来记录 是否突破了新高 如果没有保持last score"""
+            return announce_highest(who, score0, score0 - last_score if score_change else last_score)
+        else:
+            if score1 - last_score > running_high:
+                print(score1 - last_score,"point(s)! The most yet for Player 1")
+                score_change = True
+            return announce_highest(who, score1, score1-last_score if score_change else last_score)
+
+    return announce
+
     # END PROBLEM 7
 
 
@@ -322,7 +339,17 @@ def make_averaged(original_function, trials_count=1000):
     3.0
     """
     # BEGIN PROBLEM 8
-    "*** YOUR CODE HERE ***"
+    """*args-> 不知道会传多少参进这个function"""
+    def help_func(*args):
+        n = trials_count
+        avg_value = 0
+        while n:
+            avg_value += original_function(*args)
+        res = avg_value // n
+        return res 
+    
+    return help_func
+
     # END PROBLEM 8
 
 
@@ -336,7 +363,20 @@ def max_scoring_num_rolls(dice=six_sided, trials_count=1000):
     1
     """
     # BEGIN PROBLEM 9
-    "*** YOUR CODE HERE ***"
+    best_term = 0 
+    max_avg = 0 
+    i = 1
+    '''当i<= 10 的时候 call make_averaged 得到avg value '''
+    while i <= 10:
+        avg_score = make_averaged(roll_dice, trials_count)
+        '''尝试不同的roll 还有dice -> 赋值到avg上 -> 如果有更大的avg value 就更新到max_avg 最后返回term'''
+        avg = avg_score(i, dice)
+        if avg > max_avg:
+            max_avg = avg
+            best_term = i 
+        i += 1
+    return best_term
+
     # END PROBLEM 9
 
 
@@ -386,7 +426,10 @@ def bacon_strategy(score, opponent_score, cutoff=8, num_rolls=6):
     rolls NUM_ROLLS otherwise.
     """
     # BEGIN PROBLEM 10
-    return 6  # Replace this statement
+    if free_bacon(opponent_score) >= cutoff:
+        return 0
+    else:
+        return num_rolls
     # END PROBLEM 10
 
 
@@ -396,7 +439,13 @@ def extra_turn_strategy(score, opponent_score, cutoff=8, num_rolls=6):
     Otherwise, it rolls NUM_ROLLS.
     """
     # BEGIN PROBLEM 11
-    return 6  # Replace this statement
+    if extra_turn(score + free_bacon(opponent_score),  opponent_score):
+        return 0 
+    else:
+        '''otherwise的 strategy中和bacon_strategy一样:
+        rolls 0 if rolling 0 give at least cutoff. Otherwise, the strategy rolls num_rolls
+        所以这里直接return bacon_strategy'''
+        return bacon_strategy(score, opponent_score, cutoff, num_rolls)
     # END PROBLEM 11
 
 

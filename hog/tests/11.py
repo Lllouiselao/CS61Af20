@@ -7,11 +7,10 @@ test = {
         {
           'code': r"""
           >>> extra_turn_strategy(10, 19, cutoff=8, num_rolls=6)
-          962aea5f59fc55bd65ccacf4603c8f22
-          # locked
+          0
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         },
         {
           'code': r"""
