@@ -16,7 +16,16 @@ def choose(paragraphs, select, k):
     the empty string.
     """
     # BEGIN PROBLEM 1
-    "*** YOUR CODE HERE ***"
+    '''当i遍历 paragraph (小于len para) 不能等于因为len总是大一位 我们找到选中的para
+       k 用来遍历 选中的paragraph里的值 当paragraph[k] k =0就说明需要返回这个'''
+    i = 0
+    while i < len(paragraphs):
+        if select(paragraphs[i]):
+            if k ==0:
+                return paragraphs[i]
+            k -= 1
+        i += 1
+    return ''
     # END PROBLEM 1
 
 
@@ -32,7 +41,17 @@ def about(topic):
     """
     assert all([lower(x) == x for x in topic]), 'topics should be lowercase.'
     # BEGIN PROBLEM 2
-    "*** YOUR CODE HERE ***"
+    '''about 这个function 用以return True/False 
+    检查choose选中的para 是否有about里的topic'''
+    '''传入的 topic 是一段list 对于传的paragraph 我们首先要变成一个一个词组
+     检查每个词组是否在topic中 -> 是否在check(整理完的paragraph中)->return'''
+    def help(paragraph):
+        check = split(lower(remove_punctuation(paragraph)))
+        for word in topic:
+            if word in check:
+                return True 
+        return False 
+    return help
     # END PROBLEM 2
 
 
@@ -56,7 +75,19 @@ def accuracy(typed, reference):
     typed_words = split(typed)
     reference_words = split(reference)
     # BEGIN PROBLEM 3
-    "*** YOUR CODE HERE ***"
+    '''type empty accuracy -> 0'''
+    i = 0
+    count = 0 
+    if len(typed) == 0:
+        return 0.0
+    for word in typed_words:
+        if i >= len(reference_words):
+            break
+        if word == reference_words[i]:
+            count += 1
+        i += 1
+    return count / len(typed_words) * 100
+
     # END PROBLEM 3
 
 
@@ -64,7 +95,7 @@ def wpm(typed, elapsed):
     """Return the words-per-minute (WPM) of the TYPED string."""
     assert elapsed > 0, 'Elapsed time must be positive'
     # BEGIN PROBLEM 4
-    "*** YOUR CODE HERE ***"
+    return 12 * (len(typed) / elapsed)
     # END PROBLEM 4
 
 
